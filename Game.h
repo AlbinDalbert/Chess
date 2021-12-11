@@ -6,6 +6,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+#include "convertions.h"
 #define WIDTH 640
 #define HEIGHT 640
 #define BOARD_SIZE 640
@@ -48,10 +49,13 @@ class Game
 
 private:
 	//Variables
+	bool lock_click; //bool used to detect only a click
 	//Window
 	sf::Color darkSquare;
 	sf::Color lightSquare;
 	sf::Color squareOutline;
+	sf::Color lightSelectedSquare;
+	sf::Color darkSelectedSquare;
 
 	sf::RenderWindow* window;
 	sf::VideoMode videomode;
@@ -59,6 +63,7 @@ private:
 
 	//Mouse Position
 	sf::Vector2i mousePosWin;
+	sf::Vector2f mousePosView;
 
 	// Board Objects
 	sf::RectangleShape boardSquares[64];
@@ -66,6 +71,7 @@ private:
 	void initVar();
 	void initWindow();
 	void initBoard();
+	void redrawSelectedSquare(int mousepo);
 
 public:
 	
@@ -76,6 +82,7 @@ public:
 
 	void pollEvents();
 	void updateMousePosition();
+	void updateBoard();
 	void update();
 	void render();
 };

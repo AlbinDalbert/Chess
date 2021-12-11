@@ -1,5 +1,6 @@
 #include "Game.h"
-using namespace sf;
+#include "convertions.h"
+
 
 int setBoardToFEN(int board[], char FEN[]) 
 {
@@ -67,4 +68,21 @@ int setBoardToFEN(int board[], char FEN[])
 	}
 	return 0;
 	
+}
+
+int mousePosToCell(sf::Vector2i mousePosWin) 
+{	
+	if (mousePosWin.x < 0 || mousePosWin.y < 0) {
+		return -1;
+	}
+
+	int x = (int)(mousePosWin.x / CELL_SIZE);
+	int y = (int)(mousePosWin.y / CELL_SIZE);
+
+	if (x >= 8 || y >= 8) {
+		return -1;
+	}
+
+	return x + 1 + (y * 8);
+
 }
