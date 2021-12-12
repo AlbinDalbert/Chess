@@ -7,9 +7,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 #include "convertions.h"
-#define WIDTH 640
-#define HEIGHT 640
-#define BOARD_SIZE 640
+#define WIDTH 480
+#define HEIGHT 480
+#define BOARD_SIZE 480
 #define CELL_SIZE (BOARD_SIZE  / 8)
 
 
@@ -26,6 +26,18 @@
 * where every cell is a square in the order
 * documented in the figure below
 */
+
+
+
+/*
+*	Class that handles the game
+*/
+class Game
+{
+
+private:
+	//Variables
+
 /*
 *			  BLACK
 *	| 1| 2| 3| 4| 5| 6| 7| 8|
@@ -38,24 +50,17 @@
 * 	|57|58|59|60|61|62|63|64|
 *			  WHITE
 */
-int Board[];
+	std::vector<int> Board;
 
-
-/*
-*	Class that handles the game
-*/
-class Game
-{
-
-private:
-	//Variables
 	bool lock_click; //bool used to detect only a click
-	//Window
 	sf::Color darkSquare;
 	sf::Color lightSquare;
 	sf::Color squareOutline;
 	sf::Color lightSelectedSquare;
 	sf::Color darkSelectedSquare;
+	sf::Texture textures[12];
+
+	//Window
 
 	sf::RenderWindow* window;
 	sf::VideoMode videomode;
@@ -67,10 +72,12 @@ private:
 
 	// Board Objects
 	sf::RectangleShape boardSquares[64];
+	sf::Sprite pieces[12];
 
 	void initVar();
 	void initWindow();
 	void initBoard();
+	void initSprites();
 	void redrawSelectedSquare(int mousepo);
 
 public:
@@ -83,6 +90,7 @@ public:
 	void pollEvents();
 	void updateMousePosition();
 	void updateBoard();
+	void updatePiecesOnBoard();
 	void update();
 	void render();
 };

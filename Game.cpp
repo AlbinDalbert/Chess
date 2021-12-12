@@ -30,7 +30,17 @@ void Game::initWindow()
 /*
 * initialises the squares that makes up the board.
 */
-void Game::initBoard() {
+void Game::initBoard() 
+{
+    this->Board.assign({-2,-3,-4,-5,-6,-4,-3,-2,
+                    -1,-1,-1,-1,-1,-1,-1,-1,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    1,1,1,1,1,1,1,1,
+                    2,3,4,5,6,4,3,2 });
+
     int row = 0;
     for (int i = 0; i < 64; i++) {
 
@@ -66,12 +76,66 @@ void Game::initBoard() {
     }
 }
 
+void Game::initSprites()
+{
+    float scale = 1;
+    int index = 0;
+
+    this->textures[index].loadFromFile("textures/White-King.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-King.png");
+    index++;
+    this->textures[index].loadFromFile("textures/White-Queen.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-Queen.png");
+    index++;
+    this->textures[index].loadFromFile("textures/White-Bishop.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-Bishop.png");
+    index++;
+    this->textures[index].loadFromFile("textures/White-Knight.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-Knight.png");
+    index++;
+    this->textures[index].loadFromFile("textures/White-Rook.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-Rook.png");
+    index++;
+    this->textures[index].loadFromFile("textures/White-Pawn.png");
+    index++;
+    this->textures[index].loadFromFile("textures/Black-Pawn.png");
+    index++;
+
+    for (int i = 0; i < 12; i++) {
+        this->pieces[i].setTexture(this->textures[i]);
+        this->pieces[i].scale(scale, scale);
+
+    }
+    
+//    for (int i = 0; i < 6; i++) 
+//    {
+//
+//        for (int j = 0; j < 2; j++) 
+//        {
+////            if (!this->textures[index].loadFromFile("textures/pieces.png")) {
+//            /*if (!this->textures[index].loadFromFile("textures/pieces.png", sf::IntRect(i*314, j*302, 314, 302))) {
+//                std::cout << "error loading texture file\n";
+//            }*/
+
+//            
+//        }
+//
+//    }
+    
+}
+
 // Constructors / Destructors
 Game::Game()
 {
 	this->initVar();
 	this->initWindow();
     this->initBoard();
+    this->initSprites();
 }
 
 Game::~Game()
@@ -147,6 +211,12 @@ void Game::updateBoard() {
 
 }
 
+void Game::updatePiecesOnBoard() {
+
+    boardStateToSpritePos(this->Board, this->pieces, this->window);
+
+}
+
 void Game::update()
 {
 
@@ -155,6 +225,7 @@ void Game::update()
     //Update mouse position
     this->updateMousePosition();
     updateBoard();
+    
 
 }
 
@@ -167,7 +238,12 @@ void Game::render()
     {
         this->window->draw(this->boardSquares[i]);
     }
- 
+
+    updatePiecesOnBoard();
+    //for (int i = 0; i < 12; i++) 
+    //{
+    //    this->window->draw(this->pieces[i]);
+    //}
 
     this->window->display();
 
