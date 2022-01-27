@@ -1,19 +1,25 @@
 #include "Game.h"
+// public functions
 
-std::vector<pos> valid_moves_from(pos A);
+// origo is the picked position, not the center of the board
+std::vector<int> valid_moves_from(std::vector<int> inBoard, int A);
 
-bool if_enemy(pos A, pos B);
+// private functions
 
-bool within_bounds(pos A);
+/*
+bool if_enemy(int A, int B);
 
-void pawn_movement(std::vector<pos>* posList, pos A);
+bool within_bounds(int A);
 
-void rook_movement(std::vector<pos>* posList, pos A);
+void pawn_movement(std::vector<int>* posList, int A);
 
-void knight_movement(std::vector<pos>* posList, pos A);
+void rook_movement(std::vector<int>* posList, int A);
 
-void bishop_movement(std::vector<pos>* posList, pos A);
+void knight_movement(std::vector<int>* posList, int A);
 
-void queen_movement(std::vector<pos>* posList, pos A);
+void bishop_movement(std::vector<int>* posList, int A);
 
-void king_movement(std::vector<pos>* posList, pos A);
+void queen_movement(std::vector<int>* posList, int A);
+
+void king_movement(std::vector<int>* posList, int A);
+*/

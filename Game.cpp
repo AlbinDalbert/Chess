@@ -8,11 +8,11 @@
 void Game::initVar()
 {
 	this->window = nullptr;
-    this->darkSquare = sf::Color::Color(143, 117, 219);
-    this->lightSquare = sf::Color::Color(197, 187, 225);
-    this->squareOutline = sf::Color::Color(109, 89, 168);
-    this->lightSelectedSquare = sf::Color::Color(223, 88, 67);
-    this->darkSelectedSquare = sf::Color::Color(218, 30, 1);
+    this->darkSquare = sf::Color(143, 117, 219);
+    this->lightSquare = sf::Color(197, 187, 225);
+    this->squareOutline = sf::Color(109, 89, 168);
+    this->lightSelectedSquare = sf::Color(223, 88, 67);
+    this->darkSelectedSquare = sf::Color(218, 30, 1);
     this->lock_click = false;
 }
 
@@ -251,7 +251,6 @@ void Game::render()
 
 void Game::redrawSelectedSquare(int mousepos) {
     
-
     int row = 0;
     for (int i = 0; i < 64; i++) {
 
@@ -302,6 +301,10 @@ void Game::redrawSelectedSquare(int mousepos) {
         this->boardSquares[i].setOutlineColor(squareOutline);
         this->boardSquares[i].setOutlineThickness(1.f);
     }
+}
+
+std::vector<int> Game::getBoardVector() {
+    return this->Board;
 }
 
 

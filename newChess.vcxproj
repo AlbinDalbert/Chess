@@ -22,10 +22,12 @@
     <ClCompile Include="convertions.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pieceMovements.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="convertions.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="pieceMovements.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

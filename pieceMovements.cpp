@@ -3,38 +3,39 @@
 #include <vector>
 #include "pieceMovements.h"
 
+std::vector<int> Board;
 
+std::vector<int> valid_moves_from(std::vector<int> inBoard, int origin) {
+    Board = inBoard;
 
-std::vector<pos> valid_moves_from(pos A) {
+    std::vector<int> posList;
 
-    std::vector<pos> posList;
-
-    switch (abs(get_pos_status(A))) {
+    switch (abs(origin)) {
     case EMPTY:
         break;
 
     case PAWN:
-        pawn_movement(&posList, A);
+        pawn_movement(&posList, origin);
         break;
 
     case ROOK:
-        rook_movement(&posList, A);
+        rook_movement(&posList, origin);
         break;
 
     case KNIGHT:
-        knight_movement(&posList, A);
+        knight_movement(&posList, origin);
         break;
 
     case BISHOP:
-        bishop_movement(&posList, A);
+        bishop_movement(&posList, origin);
         break;
 
     case QUEEN:
-        queen_movement(&posList, A);
+        queen_movement(&posList, origin);
         break;
 
     case KING:
-        king_movement(&posList, A);
+        king_movement(&posList, origin);
         break;
 
     default:
@@ -44,11 +45,11 @@ std::vector<pos> valid_moves_from(pos A) {
     return posList;
 }
 
-bool if_enemy(pos A, pos B) {
-    if (A.val > 0 && B.val < 0) {
+bool if_enemy(int origin, int B) {
+    if (origin > 0 && B < 0) {
         return true;
     }
-    if (A.val < 0 && B.val > 0) {
+    if (origin < 0 && B > 0) {
         return true;
     }
     else {
@@ -56,186 +57,152 @@ bool if_enemy(pos A, pos B) {
     }
 }
 
-bool within_bounds(pos A) {
-    if (A.row < ROWS && A.row >= 0) {
-        if (A.col < COLS && A.col >= 0) {
-            return true;
-        }
+// return -1 outside of bound
+// return 0 is edge
+// return 1 inside but not edge
+
+int is_edge(int pos) {
+    if (pos < 0 || pos > 63) {
+        return -1;
     }
-    return false;
+
+    else if (pos < 9 || pos > 54) {
+        return 0;
+    }
+
+    else if ((pos % 8) == 0 || (pos % 8) == 7) {
+        return 0;
+    }
+    
+    else {
+        return 1;
+    }
 }
 
 
-void pawn_movement(std::vector<pos>* posList, pos A) {
-    pos tempPos;
-    //checks if A is a white pawn
-    if (get_pos_status(A) > 0) {
-        if (get_pos_status(A.row + 1, A.col) == EMPTY && A.row < ROWS) {
-            tempPos.row = A.row + 1;
-            tempPos.col = A.col;
-            posList->push_back(tempPos);
-        }
-        if ((A.row == 1) && (get_pos_status(A.row + 2, A.col) == EMPTY)) {
-            tempPos.row = A.row + 2;
-            tempPos.col = A.col;
-            posList->push_back(tempPos);
-        }
-        if (get_pos_status(A.row + 1, A.col + 1) < 0 && A.row + 1 < ROWS && A.col + 1 < COLS) {
-            tempPos.row = A.row + 1;
-            tempPos.col = A.col + 1;
-            posList->push_back(tempPos);
-        }
-        if (get_pos_status(A.row + 1, A.col - 1) < 0 && A.row + 1 < ROWS && A.col - 1 >= 0) {
-            tempPos.row = A.row + 1;
-            tempPos.col = A.col - 1;
-            posList->push_back(tempPos);
-        }
-    }
-    //checks if A is a black pawn
-    if (get_pos_status(A) < 0) {
-        if (get_pos_status(A.row - 1, A.col) == EMPTY && A.row > 0) {
-            tempPos.row = A.row - 1;
-            tempPos.col = A.col;
-            posList->push_back(tempPos);
-        }
-        if ((A.row == 7) && (get_pos_status(A.row - 2, A.col) == EMPTY)) {
-            tempPos.row = A.row - 2;
-            tempPos.col = A.col;
-            posList->push_back(tempPos);
-        }
-        if (get_pos_status(A.row - 1, A.col - 1) < 0 && A.row - 1 < ROWS && A.col + 1 < COLS) {
-            tempPos.row = A.row + 1;
-            tempPos.col = A.col + 1;
-            posList->push_back(tempPos);
-        }
-        if (get_pos_status(A.row - 1, A.col + 1) < 0 && A.row - 1 < ROWS && A.col - 1 >= 0) {
-            tempPos.row = A.row - 1;
-            tempPos.col = A.col - 1;
-            posList->push_back(tempPos);
-        }
-    }
-}
+void pawn_movement(std::vector<int>* posList, int origin) {
+    //checks if origin is a white pawn
+    if (origin > 0) {
 
-void rook_movement(std::vector<pos>* posList, pos A) {
-    pos tempPos;
-    for (int i = A.row + 1; i < ROWS; i++) {
-        tempPos.row = i;
-        tempPos.col = A.col;
-        // checks if the pos is empty
-        if (get_pos_status(i, A.col) == EMPTY) {
-            posList->push_back(tempPos);
-            // checks if the pos is a enemy
+        if (Board.at(origin - 8) == EMPTY && (origin - 8) > 0) {
+            posList->push_back(origin - 8);
         }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            break;
-        }
-        // breaks the loop
-        else {
-            break;
-        }
-    }
-    for (int i = A.row - 1; i >= 0; i--) {
-        if (get_pos_status(i, A.col) == EMPTY) {
-            tempPos.row = i;
-            tempPos.col = A.col;
-            posList->push_back(tempPos);
-            // checks if the pos is a enemy
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            break;
-            // breaks the loopelse 
-        }
-        else {
 
-            break;
+        if (origin > 47 && origin < 56 && Board.at(origin - 16) == EMPTY) {
+            posList->push_back(origin - 16);
+        }
+
+        if (if_enemy(origin, origin - 7) && (origin - 7) > 0) {
+            posList->push_back(origin - 7);
+        }
+
+        if (if_enemy(origin, origin - 9) && (origin - 9) > 0) {
+            posList->push_back(origin - 9);
         }
     }
-    for (int i = A.col + 1; i < COLS; i++) {
-        if (get_pos_status(A.row, i) == EMPTY) {
-            tempPos.row = A.row;
-            tempPos.col = i;
-            posList->push_back(tempPos);
-            // checks if the pos is a enemy
+    //checks if origin is a black pawn
+    if (origin < 0) {
+
+        if (Board.at(origin + 8) == EMPTY && (origin + 8) < 65) {
+            posList->push_back(origin + 8);
         }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            break;
-            // breaks the loopelse 
+
+        if (origin > 7 && origin < 16 && Board.at(origin + 16) == EMPTY) {
+            posList->push_back(origin + 16);
         }
-        else {
-            break;
+
+        if (if_enemy(origin, origin + 7) && (origin + 7) < 65) {
+            posList->push_back(origin + 7);
         }
-    }
-    for (int i = A.col - 1; i >= 0; i--) {
-        if (get_pos_status(A.row, i) == EMPTY) {
-            tempPos.row = A.row;
-            tempPos.col = i;
-            posList->push_back(tempPos);
-            // checks if the pos is a enemy
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            break;
-            // breaks the loopelse 
-        }
-        else {
-            break;
+
+        if (if_enemy(origin, origin + 9) && (origin + 9) < 65) {
+            posList->push_back(origin + 9);
         }
     }
 }
 
-void knight_movement(std::vector<pos>* posList, pos A) {
-    pos tempPos;
-    tempPos.row = A.row + 2;
-    tempPos.col = A.col + 1;
+void rook_movement(std::vector<int>* posList, int origin) {
+
+#define LOOPCONTENT \
+    if (Board.at(i) == EMPTY) { \
+        posList->push_back(i); \
+    } \
+    else if (if_enemy(origin, i)) { \
+        posList->push_back(i); \
+        break; \
+    } \
+    else { \
+        break; \
+    }
+
+    for (int i = origin + 1; i < 8; i++) {
+        LOOPCONTENT
+    }
+
+    for (int i = origin - 1; i >= 0; i--) {
+        LOOPCONTENT
+    }
+
+    for (int i = origin; i < 64; i += 8) {
+        LOOPCONTENT
+    }
+
+    for (int i = origin; i >= 0; i -= 8) {
+        LOOPCONTENT
+    }
+
+}
+
+void knight_movement(std::vector<int>* posList, int origin) {
+    int tempPos;
+    tempPos.row = origin.row + 2;
+    tempPos.col = origin.col + 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 2;
-    tempPos.col = A.col - 1;
+    tempPos.row = origin.row + 2;
+    tempPos.col = origin.col - 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 2;
-    tempPos.col = A.col + 1;
+    tempPos.row = origin.row - 2;
+    tempPos.col = origin.col + 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 2;
-    tempPos.col = A.col - 1;
+    tempPos.row = origin.row - 2;
+    tempPos.col = origin.col - 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 1;
-    tempPos.col = A.col + 2;
+    tempPos.row = origin.row + 1;
+    tempPos.col = origin.col + 2;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 1;
-    tempPos.col = A.col + 2;
+    tempPos.row = origin.row - 1;
+    tempPos.col = origin.col + 2;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 1;
-    tempPos.col = A.col - 2;
+    tempPos.row = origin.row + 1;
+    tempPos.col = origin.col - 2;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 1;
-    tempPos.col = A.col - 2;
+    tempPos.row = origin.row - 1;
+    tempPos.col = origin.col - 2;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
 }
 
-void bishop_movement(std::vector<pos>* posList, pos A) {
-    pos tempPos;
+void bishop_movement(std::vector<int>* posList, int origin) {
+    int tempPos;
     bool dir1, dir2, dir3, dir4 = true;
     for (int i = 1; i < ROWS; i++) {
-        tempPos.row = A.row + i;
-        tempPos.col = A.col + i;
+        tempPos.row = origin.row + i;
+        tempPos.col = origin.col + i;
         if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir1) {
             posList->push_back(tempPos);
         }
@@ -244,8 +211,8 @@ void bishop_movement(std::vector<pos>* posList, pos A) {
             dir1 = false;
         }
 
-        tempPos.row = A.row + i;
-        tempPos.col = A.col - i;
+        tempPos.row = origin.row + i;
+        tempPos.col = origin.col - i;
         if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir2) {
             posList->push_back(tempPos);
         }
@@ -254,8 +221,8 @@ void bishop_movement(std::vector<pos>* posList, pos A) {
             dir2 = false;
         }
 
-        tempPos.row = A.row - i;
-        tempPos.col = A.col + i;
+        tempPos.row = origin.row - i;
+        tempPos.col = origin.col + i;
         if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir3) {
             posList->push_back(tempPos);
         }
@@ -264,8 +231,8 @@ void bishop_movement(std::vector<pos>* posList, pos A) {
             dir3 = false;
         }
 
-        tempPos.row = A.row - i;
-        tempPos.col = A.col - i;
+        tempPos.row = origin.row - i;
+        tempPos.col = origin.col - i;
         if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir4) {
             posList->push_back(tempPos);
         }
@@ -281,50 +248,50 @@ void bishop_movement(std::vector<pos>* posList, pos A) {
     }
 }
 
-void queen_movement(std::vector<pos>* posList, pos A) {
-    rook_movement(posList, A);
-    bishop_movement(posList, A);
+void queen_movement(std::vector<int>* posList, int origin) {
+    rook_movement(posList, origin);
+    bishop_movement(posList, origin);
 }
 
-void king_movement(std::vector<pos>* posList, pos A) {
-    pos tempPos;
-    tempPos.row = A.row;
-    tempPos.col = A.col + 1;
+void king_movement(std::vector<int>* posList, int origin) {
+    int tempPos;
+    tempPos.row = origin.row;
+    tempPos.col = origin.col + 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row;
-    tempPos.col = A.col - 1;
+    tempPos.row = origin.row;
+    tempPos.col = origin.col - 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 1;
-    tempPos.col = A.col;
+    tempPos.row = origin.row + 1;
+    tempPos.col = origin.col;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 1;
-    tempPos.col = A.col;
+    tempPos.row = origin.row - 1;
+    tempPos.col = origin.col;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 1;
-    tempPos.col = A.col + 1;
+    tempPos.row = origin.row + 1;
+    tempPos.col = origin.col + 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row + 1;
-    tempPos.col = A.col - 1;
+    tempPos.row = origin.row + 1;
+    tempPos.col = origin.col - 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 1;
-    tempPos.col = A.col - 1;
+    tempPos.row = origin.row - 1;
+    tempPos.col = origin.col - 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
-    tempPos.row = A.row - 1;
-    tempPos.col = A.col + 1;
+    tempPos.row = origin.row - 1;
+    tempPos.col = origin.col + 1;
     if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
         posList->push_back(tempPos);
     }
