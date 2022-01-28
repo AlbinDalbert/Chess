@@ -135,11 +135,11 @@ void rook_movement(std::vector<int>* posList, int origin) {
         break; \
     }
 
-    for (int i = origin + 1; i < 8; i++) {
+    for (int i = origin + 1; (i % 8) > 0; i++) {
         LOOPCONTENT
     }
 
-    for (int i = origin - 1; i >= 0; i--) {
+    for (int i = origin - 1; (i % 8) < 7; i--) {
         LOOPCONTENT
     }
 
@@ -153,98 +153,47 @@ void rook_movement(std::vector<int>* posList, int origin) {
 
 }
 
+
 void knight_movement(std::vector<int>* posList, int origin) {
-    int tempPos;
-    tempPos.row = origin.row + 2;
-    tempPos.col = origin.col + 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 2;
-    tempPos.col = origin.col - 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 2;
-    tempPos.col = origin.col + 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 2;
-    tempPos.col = origin.col - 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 1;
-    tempPos.col = origin.col + 2;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 1;
-    tempPos.col = origin.col + 2;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 1;
-    tempPos.col = origin.col - 2;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 1;
-    tempPos.col = origin.col - 2;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
+    int knightOffsets[] = { -17, -15, -10,-6, 6, 10, 15, 17 };
+    int pos;
+
+    for (int i : knightOffsets)
+    {
+        pos = origin + i;
+        if (pos < 64 & (Board.at(pos) == EMPTY || if_enemy(origin, pos))) {
+            posList->push_back(pos);
+        }
     }
 }
 
 void bishop_movement(std::vector<int>* posList, int origin) {
-    int tempPos;
-    bool dir1, dir2, dir3, dir4 = true;
-    for (int i = 1; i < ROWS; i++) {
-        tempPos.row = origin.row + i;
-        tempPos.col = origin.col + i;
-        if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir1) {
-            posList->push_back(tempPos);
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            dir1 = false;
-        }
+#define LOOPCONTENT \
+    if (Board.at(i) == EMPTY) { \
+        posList->push_back(i); \
+    } \
+    else if (if_enemy(origin, i)) { \
+        posList->push_back(i); \
+        break; \
+    } \
+    else { \
+        break; \
+    }
 
-        tempPos.row = origin.row + i;
-        tempPos.col = origin.col - i;
-        if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir2) {
-            posList->push_back(tempPos);
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            dir2 = false;
-        }
+    for (int i = origin + 9; (i % 8) > 0 && i < 64; i += 9) {
+        LOOPCONTENT
+    }
 
-        tempPos.row = origin.row - i;
-        tempPos.col = origin.col + i;
-        if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir3) {
-            posList->push_back(tempPos);
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            dir3 = false;
-        }
+    for (int i = origin + 7; (i % 8) < 7 && i < 64; i += 7) {
+        LOOPCONTENT
+    }
 
-        tempPos.row = origin.row - i;
-        tempPos.col = origin.col - i;
-        if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY)) && within_bounds(tempPos) && dir4) {
-            posList->push_back(tempPos);
-        }
-        else if (if_enemy(A, tempPos)) {
-            posList->push_back(tempPos);
-            dir4 = false;
-        }
+    for (int i = origin - 9; (i % 8) < 7 && i > 0; i -= 9) {
+        LOOPCONTENT
+    }
 
-        if (!dir1 && !dir2 && !dir3 && dir4) {
-            i = ROWS;
-        }
-
+    for (int i = origin - 7; (i % 8) > 0 && i > 0; i -= 7) {
+        LOOPCONTENT
     }
 }
 
@@ -254,45 +203,15 @@ void queen_movement(std::vector<int>* posList, int origin) {
 }
 
 void king_movement(std::vector<int>* posList, int origin) {
-    int tempPos;
-    tempPos.row = origin.row;
-    tempPos.col = origin.col + 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row;
-    tempPos.col = origin.col - 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 1;
-    tempPos.col = origin.col;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 1;
-    tempPos.col = origin.col;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 1;
-    tempPos.col = origin.col + 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row + 1;
-    tempPos.col = origin.col - 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 1;
-    tempPos.col = origin.col - 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
-    }
-    tempPos.row = origin.row - 1;
-    tempPos.col = origin.col + 1;
-    if (((get_pos_status(tempPos.row, tempPos.col) == EMPTY) || if_enemy(A, tempPos)) && within_bounds(tempPos)) {
-        posList->push_back(tempPos);
+
+    int kingOffsets[] = { -9, -8, -7,-1, 1, 7, 8, 9 };
+    int pos;
+
+    for (int i : kingOffsets)
+    {
+        pos = origin + i;
+        if (pos < 64 & (Board.at(pos) == EMPTY || if_enemy(origin, pos))) {
+            posList->push_back(pos);
+        }
     }
 }
