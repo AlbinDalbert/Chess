@@ -94,6 +94,10 @@ void boardStateToSpritePos(std::vector<int> board, sf::Sprite pieces[], sf::Rend
 		if (((i * CELL_SIZE) % (BOARD_SIZE) == 0) && i != 0) {
 			row++;
 		}
+
+		float x = ((i * (CELL_SIZE)) % BOARD_SIZE) + ((CELL_SIZE - 60) / 2);
+		float y = row * (CELL_SIZE) + ((CELL_SIZE - 60) / 2);
+
 		switch (board[i])
 		{
 		//case '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8':
@@ -106,52 +110,52 @@ void boardStateToSpritePos(std::vector<int> board, sf::Sprite pieces[], sf::Rend
 		case 0:
 			break;
 		case -2:
-			pieces[9].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[9].setPosition( x, y);
 			window->draw(pieces[9]);
 			break;
 		case -3:
-			pieces[7].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[7].setPosition(x, y);
 			window->draw(pieces[7]);
 			break;
 		case -4:
-			pieces[5].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[5].setPosition(x, y);
 			window->draw(pieces[5]);
 			break;
 		case -5:
-			pieces[3].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[3].setPosition(x, y);
 			window->draw(pieces[3]);
 			break;
 		case -6:
-			pieces[1].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[1].setPosition(x, y);
 			window->draw(pieces[1]);
 			break;
 		case -1:
-			pieces[11].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[11].setPosition(x, y);
 			window->draw(pieces[11]);
 			break;
 
 		case 2:
-			pieces[8].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[8].setPosition(x, y);
 			window->draw(pieces[8]);
 			break;
 		case 3:
-			pieces[6].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[6].setPosition(x, y);
 			window->draw(pieces[6]);
 			break;
 		case 4:
-			pieces[4].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[4].setPosition(x, y);
 			window->draw(pieces[4]);
 			break;
 		case 5:
-			pieces[2].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[2].setPosition(x, y);
 			window->draw(pieces[2]);
 			break;
 		case 6:
-			pieces[0].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[0].setPosition(x, y);
 			window->draw(pieces[0]);
 			break;
 		case 1:
-			pieces[10].setPosition((i * (CELL_SIZE)) % BOARD_SIZE, row * (CELL_SIZE));
+			pieces[10].setPosition(x, y);
 			window->draw(pieces[10]);
 			break;
 

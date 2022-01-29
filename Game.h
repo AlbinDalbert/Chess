@@ -9,9 +9,9 @@
 #include <SFML/Network.hpp>
 #include "pieceMovements.h"
 #include "convertions.h"
-#define WIDTH 480
-#define HEIGHT 480
-#define BOARD_SIZE 480
+#define WIDTH 1080
+#define HEIGHT 820
+#define BOARD_SIZE 640
 #define CELL_SIZE (BOARD_SIZE  / 8)
 
 
