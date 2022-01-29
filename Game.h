@@ -54,7 +54,8 @@ private:
 */
 	std::vector<int> Board;
 
-	bool lock_click; //bool used to detect only a click
+	bool lock_click; // bool used to detect only a click
+	bool whiteTurn = true; // Used to keep track of whose turn it is.
 	int pieceSelected;
 	std::vector<int> validMoves;
 	sf::Color darkSquare;

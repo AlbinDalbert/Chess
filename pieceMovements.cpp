@@ -51,7 +51,7 @@ void pawn_movement(std::vector<int>* posList, int origin) {
         }
 
         if (origin > 47 && origin < 56) {
-            if (Board.at(origin - 16) == EMPTY)
+            if (Board.at(origin - 16) == EMPTY && Board.at(origin - 8) == EMPTY)
                 posList->push_back(origin - 16);
         }
 
@@ -74,7 +74,7 @@ void pawn_movement(std::vector<int>* posList, int origin) {
         }
 
         if (origin > 7 && origin < 16) {
-            if(Board.at(origin + 16) == EMPTY)
+            if(Board.at(origin + 16) == EMPTY && Board.at(origin + 8) == EMPTY)
                 posList->push_back(origin + 16);
         }
 
@@ -94,6 +94,8 @@ void rook_movement(std::vector<int>* posList, int origin) {
 
 #define LOOPCONTENT \
     std::cout << i << i%8 << "\n"; \
+    if(i < 0 || i > 63) break; \
+\
     if (Board.at(i) == EMPTY) { \
         posList->push_back(i); \
     } \
@@ -106,7 +108,6 @@ void rook_movement(std::vector<int>* posList, int origin) {
     }
 
     for (int i = origin + 1; (i % 8) > 0 && i < 64; i++) {
-        
         LOOPCONTENT
     }
 
@@ -114,11 +115,11 @@ void rook_movement(std::vector<int>* posList, int origin) {
         LOOPCONTENT
     }
 
-    for (int i = origin; i < 64; i += 8) {
+    for (int i = origin + 8; i < 64; i += 8) {
         LOOPCONTENT
     }
 
-    for (int i = origin; i >= 0; i -= 8) {
+    for (int i = origin - 8; i >= 0; i -= 8) {
         LOOPCONTENT
     }
 
@@ -145,7 +146,9 @@ void knight_movement(std::vector<int>* posList, int origin) {
             else {
                 posList->push_back(pos);
             }*/
-            posList->push_back(pos);
+            if (abs(abs(origin % 8) - abs((origin + i) % 8)) < 3) {
+                posList->push_back(pos);
+            }
             
         }
     }

@@ -207,8 +207,13 @@ void Game::updateBoard() {
                     int temp = this->Board.at(pieceSelected);
                     this->Board.at(pieceSelected) = 0;
                     this->Board.at(moveTo) = temp;
+                    
+                    if (whiteTurn)
+                        whiteTurn = false;
+                    else
+                        whiteTurn = true;
+                    
                 }
-             
                 
                 for (int i = 0; i < 64; i++) {
                     std::cout << this->Board.at(i) << " ";
@@ -216,6 +221,8 @@ void Game::updateBoard() {
                         std::cout << "\n";
                     }
                 }
+
+
 
                 pieceSelected = -1;
                 lock_click = true;
@@ -236,13 +243,19 @@ void Game::updateBoard() {
                 //execute the click here
                 std::cout << "click on cell " << cellClicked << "\n";
                 redrawSelectedSquare(cellClicked);
-                validMoves = drawPossibleMoves(mousePosToCell(mousePosWin));
-                if (!validMoves.empty()) {
-                    pieceSelected = cellClicked;
+                if ((whiteTurn && Board.at(cellClicked) > 0) || (!whiteTurn && Board.at(cellClicked) < 0)) {
+                    validMoves = drawPossibleMoves(mousePosToCell(mousePosWin));
+                    if (!validMoves.empty()) {
+                        pieceSelected = cellClicked;
+
+
+                    }
+                    else {
+                        pieceSelected = -1;
+                    }
+
                 }
-                else {
-                    pieceSelected = -1;
-                }
+                
                 lock_click = true;
 
             }
