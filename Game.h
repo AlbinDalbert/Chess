@@ -1,4 +1,5 @@
 #ifndef GAME_H
+#define GAME_H
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -6,6 +7,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+#include "pieceMovements.h"
 #include "convertions.h"
 #define WIDTH 480
 #define HEIGHT 480
@@ -53,11 +55,14 @@ private:
 	std::vector<int> Board;
 
 	bool lock_click; //bool used to detect only a click
+	int pieceSelected;
+	std::vector<int> validMoves;
 	sf::Color darkSquare;
 	sf::Color lightSquare;
 	sf::Color squareOutline;
 	sf::Color lightSelectedSquare;
 	sf::Color darkSelectedSquare;
+	sf::Color possibleSquareMoves;
 	sf::Texture textures[12];
 
 	//Window
@@ -78,7 +83,8 @@ private:
 	void initWindow();
 	void initBoard();
 	void initSprites();
-	void redrawSelectedSquare(int mousepo);
+	void redrawSelectedSquare(int mousepos);
+	std::vector<int> drawPossibleMoves(int mousepos);
 
 public:
 	

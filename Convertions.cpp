@@ -82,7 +82,7 @@ int mousePosToCell(sf::Vector2i mousePosWin)
 		return -1;
 	}
 
-	return x + 1 + (y * 8);
+	return (x + 1 + (y * 8)) - 1;
 
 }
 

@@ -1,10 +1,10 @@
 #include "Game.h"
 
-
 int main()
 {
     // Window
     Game game;
+
     //Game
     while (game.running())
     {

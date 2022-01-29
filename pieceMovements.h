@@ -1,3 +1,5 @@
+#ifndef PIECEMOVEMENTS_H
+#define PIECEMOVEMENTS_H
 #include "Game.h"
 // public functions
 
@@ -23,3 +25,4 @@ void queen_movement(std::vector<int>* posList, int A);
 
 void king_movement(std::vector<int>* posList, int A);
 */
+#endif // !PIECEMOVEMENTS_H

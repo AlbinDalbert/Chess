@@ -13,7 +13,9 @@ void Game::initVar()
     this->squareOutline = sf::Color(109, 89, 168);
     this->lightSelectedSquare = sf::Color(223, 88, 67);
     this->darkSelectedSquare = sf::Color(218, 30, 1);
+    this->possibleSquareMoves = sf::Color(200, 30, 80);
     this->lock_click = false;
+    this->pieceSelected = -1;
 }
 
 void Game::initWindow()
@@ -185,31 +187,81 @@ void Game::updateMousePosition()
 *   There is also a locking mechanism that locks the listener until the butten is pressed again
 */
 void Game::updateBoard() {
-    
-    // listen for click
 
-    if (ev.type == sf::Event::MouseButtonPressed)
-    {
-        if (ev.mouseButton.button == sf::Mouse::Left && lock_click != true) //specifies
+    // listen for click
+    int cellClicked;
+
+    if (pieceSelected > -1) {
+        if (ev.type == sf::Event::MouseButtonPressed)
         {
-            //execute the click here
-            std::cout << "click on cell " << mousePosToCell(mousePosWin) << "\n";
-            redrawSelectedSquare(mousePosToCell(mousePosWin)-1);
-            lock_click = true;
-            
+            if (ev.mouseButton.button == sf::Mouse::Left && lock_click != true) //specifies
+            {
+                //execute the click here
+                cellClicked = mousePosToCell(mousePosWin);
+
+                std::cout << pieceSelected << "\n";
+ 
+                int moveTo = mousePosToCell(mousePosWin);
+                if (std::find(validMoves.begin(), validMoves.end(), moveTo) != validMoves.end())
+                {
+                    int temp = this->Board.at(pieceSelected);
+                    this->Board.at(pieceSelected) = 0;
+                    this->Board.at(moveTo) = temp;
+                }
+             
+                
+                for (int i = 0; i < 64; i++) {
+                    std::cout << this->Board.at(i) << " ";
+                    if (i % 8 == 7) {
+                        std::cout << "\n";
+                    }
+                }
+
+                pieceSelected = -1;
+                lock_click = true;
+
+            }
         }
+
+    }
+    else {
+
+        if (ev.type == sf::Event::MouseButtonPressed)
+        {
+            if (ev.mouseButton.button == sf::Mouse::Left && lock_click != true) //specifies
+            {
+                cellClicked = mousePosToCell(mousePosWin);
+
+
+                //execute the click here
+                std::cout << "click on cell " << cellClicked << "\n";
+                redrawSelectedSquare(cellClicked);
+                validMoves = drawPossibleMoves(mousePosToCell(mousePosWin));
+                if (!validMoves.empty()) {
+                    pieceSelected = cellClicked;
+                }
+                else {
+                    pieceSelected = -1;
+                }
+                lock_click = true;
+
+            }
+        }
+
     }
     //unlocks the button
-    if (ev.type == sf::Event::MouseButtonReleased) 
+    if (ev.type == sf::Event::MouseButtonReleased)
     {
-        if (ev.mouseButton.button == sf::Mouse::Left) 
+        if (ev.mouseButton.button == sf::Mouse::Left)
         {
-            
+
             lock_click = false;
         }
     }
-
 }
+
+
+
 
 void Game::updatePiecesOnBoard() {
 
@@ -247,6 +299,15 @@ void Game::render()
 
     this->window->display();
 
+}
+
+std::vector<int> Game::drawPossibleMoves(int mousePos) 
+{
+    std::vector<int> possibleMoves = valid_moves_from(Board, mousePos);
+    for (int i : possibleMoves) {
+        this->boardSquares[i].setFillColor(possibleSquareMoves);
+    }
+    return possibleMoves;
 }
 
 void Game::redrawSelectedSquare(int mousepos) {
@@ -301,6 +362,7 @@ void Game::redrawSelectedSquare(int mousepos) {
         this->boardSquares[i].setOutlineColor(squareOutline);
         this->boardSquares[i].setOutlineThickness(1.f);
     }
+    
 }
 
 std::vector<int> Game::getBoardVector() {
