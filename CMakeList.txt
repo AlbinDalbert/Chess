@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.10)
+file(GLOB SOURCE_FILE_LIBS "External/include/*.hpp" "External/lib/*.lib" "./*.hpp")
+set(TARGET Chess)
+set(SOURCES main.cpp Game.cpp Convertions.cpp pieceMovements.cpp)
+
+# set the project name
+project(${TARGET})
+
+# add the executable
+# add_executable(Game Game.cpp)
+add_executable(${TARGET} ${SOURCE_FILE_LIBS} ${SOURCES})
+
+include_directories(./External/include)
+include_directories(./External/lib)
+include_directories(./)
+
+link_directories(./External/include)
+link_directories(./External/lib)
+link_directories(./)
+
+target_link_libraries(${TARGET} -L./External/include)
+target_link_libraries(${TARGET} -L./External/lib)
