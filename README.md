@@ -1,5 +1,7 @@
 ## Chess
 
+Update!: This reposetory has been abounten and all of the work here will be frebuilt and refactoured into a program built in Rust, there are two main reasons for this. First, the decition to use SFML did not fit the nature of this project as physics and sprites are not very central to the functionality, and personally I'm much more interested in programing this in Rust as it's abstraction seems more relevant to a program with a graphical interface while still having a relativly high performence.
+
 Work In Progress!
 
 I started this project because I wanted to try to develop a bot that traverses different future scenarios and evaluates each on to find which one is best. 
