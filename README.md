@@ -1,6 +1,6 @@
 ## Chess
 
-Update!: This reposetory has been abounten and all of the work here will be rebuilt and refactoured into a program built in Rust, there are two main reasons for this. First, the decition to use SFML did not fit the nature of this project as physics and sprites are not very central to the functionality, and personally I'm much more interested in programing this in Rust as it's abstraction seems more relevant to a program with a graphical interface while still having a relativly high performence.
+Update!: This reposetory has been abandon and all of the work here will be rebuilt and refactoured into a program built in Rust, there are two main reasons for this. First, the decition to use SFML did not fit the nature of this project as physics and sprites are not very central to the functionality, and personally I'm much more interested in programing this in Rust as it's abstraction seems more relevant to a program with a graphical interface while still having a relativly high performence.
 
 Work In Progress!
 
